@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>URL解析器 - 在线网址参数解析提取工具 | DevTools</title>
+<meta name="description" content="免费在线URL解析工具：输入网址自动提取协议、域名、端口、路径、查询参数等。支持参数表格化展示。">
+<meta name="keywords" content="URL解析,网址解析,url parser,查询参数提取,URL分析,链接解析">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/url-parser/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / URL 解析器</div>
+<h1>🔗 URL 解析器</h1>
+<p class="tool-desc">粘贴URL，自动解析协议、域名、端口、路径、查询参数、Hash等所有组成部分。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<input type="text" class="tool-input" id="urlInput" placeholder="粘贴URL… 例如：https://example.com:8080/path/to?q=1&lang=zh#section" style="min-height:auto;font-size:1rem" oninput="parseURL()">
+<div id="results" style="margin-top:1rem"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+function parseURL(){
+const raw=document.getElementById('urlInput').value.trim();
+const container=document.getElementById('results');
+if(!raw){container.innerHTML='';return}
+try{
+const u=new URL(raw);
+const params=[...u.searchParams.entries()];
+container.innerHTML=`
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem">
+${row('🔗 完整URL',raw)}
+${row('📡 协议 (Protocol)',u.protocol.replace(':',''))}
+${row('🌐 主机名 (Hostname)',u.hostname)}
+${row('🔌 端口 (Port)',u.port||'默认 (80/443)')}
+${row('📂 路径 (Pathname)',u.pathname||'/')}
+${row('🔍 查询字符串 (Search)',u.search||'(无)' )}
+${row('#️⃣ Hash',u.hash||'(无)')}
+${row('👤 用户名 (Username)',u.username||'(无)')}
+${row('🔑 密码 (Password)',u.password||'(无)')}
+${row('📝 来源 (Origin)',u.origin)}
+</div>
+${params.length?`<div style="margin-top:1rem"><h4 style="color:#94a3b8;font-size:.8125rem;margin-bottom:.5rem">📋 查询参数 (${params.length}个)</h4>
+<table style="width:100%;border-collapse:collapse"><tr style="background:#0f172a"><th style="padding:.5rem 1rem;text-align:left;color:#94a3b8;font-size:.75rem;border:1px solid #1e293b">参数名</th><th style="padding:.5rem 1rem;text-align:left;color:#94a3b8;font-size:.75rem;border:1px solid #1e293b">值</th></tr>
+${params.map(([k,v])=>`<tr><td style="padding:.5rem 1rem;border:1px solid #1e293b;font-family:monospace;color:#f1f5f9;font-size:.8125rem">${k}</td><td style="padding:.5rem 1rem;border:1px solid #1e293b;font-family:monospace;color:#e2e8f0;font-size:.8125rem;word-break:break-all">${v||'(空)'}</td></tr>`).join('')}</table></div>`:'<p style="color:#64748b;font-size:.75rem;margin-top:.5rem">无查询参数</p>'}`;
+}catch(e){
+container.innerHTML=`<div style="background:rgba(239,68,68,.1);border-left:3px solid #ef4444;padding:1rem;border-radius:8px;color:#f87171">❌ 无效的URL：${e.message}</div>`;
+}
+}
+function row(label,value){
+return `<div style="background:#0f172a;border-radius:10px;padding:.875rem 1rem"><div style="color:#64748b;font-size:.6875rem;margin-bottom:.25rem">${label}</div><div style="color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:.8125rem;word-break:break-all">${value}</div></div>`;
+}
+document.getElementById('urlInput').value='https://user:pass@example.com:8080/path/to/page?q=hello&lang=zh-CN&page=1#section-2';
+parseURL();
+</script>
+</body>
+</html>
