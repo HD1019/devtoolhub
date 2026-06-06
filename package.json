@@ -1,0 +1,24 @@
+{
+  "name": "devtoolhub",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">   <img src=\"https://img.shields.io/badge/tools-10-blue?style=for-the-badge\" alt=\"10 Tools\">   <img src=\"https://img.shields.io/badge/privacy-first-green?style=for-the-badge\" alt=\"Privacy First\">   <img src=\"https://img.shields.io/badge/no%20signup%20required-orange?style=for-the-badge\" alt=\"No Signup\">   <img src=\"https://img.shields.io/badge/license-MIT-purple?style=for-the-badge\" alt=\"MIT License\"> </p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HD1019/devtoolhub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/HD1019/devtoolhub/issues"
+  },
+  "homepage": "https://github.com/HD1019/devtoolhub#readme",
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

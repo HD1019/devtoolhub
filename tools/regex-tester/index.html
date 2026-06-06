@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>正则表达式测试 - 在线Regex调试匹配工具 | DevTools</title>
+<meta name="description" content="免费在线正则表达式测试工具：输入正则和测试文本，实时高亮所有匹配。支持全局匹配、分组捕获、替换测试。">
+<meta name="keywords" content="正则表达式,regex tester,regex在线,正则测试,正则调试,regular expression">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/regex-tester/">
+<link rel="stylesheet" href="../../css/style.css">
+<style>.match-highlight{background:rgba(59,130,246,.4);border-radius:2px;padding:0 2px}
+.group-highlight{background:rgba(139,92,246,.4);border-radius:2px;padding:0 2px;margin:0 2px}
+#testArea{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:1rem;min-height:120px;font-family:'JetBrains Mono',monospace;font-size:.875rem;color:#e2e8f0;white-space:pre-wrap;word-break:break-all;line-height:1.8}</style>
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / 正则表达式测试器</div>
+<h1>🔍 正则表达式测试器</h1>
+<p class="tool-desc">输入正则表达式和测试文本，实时查看匹配结果。支持全局标志、分组捕获和替换功能。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem">
+<div style="flex:1;min-width:200px"><label>正则表达式</label>
+<input type="text" class="tool-input" id="regexInput" placeholder="例如：\b\w+@\w+\.\w+\b" style="min-height:auto;font-family:'JetBrains Mono',monospace" oninput="testRegex()"></div>
+<div style="display:flex;gap:.25rem;align-items:flex-end">
+<label style="display:flex;align-items:center;gap:.25rem;cursor:pointer;padding:.5rem .75rem;background:#334155;border-radius:8px;font-size:.75rem"><input type="checkbox" id="flagG" checked onchange="testRegex()"> g</label>
+<label style="display:flex;align-items:center;gap:.25rem;cursor:pointer;padding:.5rem .75rem;background:#334155;border-radius:8px;font-size:.75rem"><input type="checkbox" id="flagI" onchange="testRegex()"> i</label>
+<label style="display:flex;align-items:center;gap:.25rem;cursor:pointer;padding:.5rem .75rem;background:#334155;border-radius:8px;font-size:.75rem"><input type="checkbox" id="flagM" onchange="testRegex()"> m</label>
+</div>
+</div>
+<label>测试文本</label>
+<textarea id="testText" placeholder="输入测试文本…" oninput="testRegex()" style="min-height:150px"></textarea>
+<label>替换为（可选）</label>
+<div style="display:flex;gap:.5rem"><input type="text" class="tool-input" id="replaceText" placeholder="替换文本（留空仅匹配）" style="min-height:auto" oninput="testRegex()">
+<button class="btn btn-secondary" onclick="copyResult()">📋 复制结果</button></div>
+<div style="margin-top:1rem"><label>匹配结果</label>
+<div id="resultArea" style="color:#94a3b8;margin-bottom:.5rem;font-size:.8125rem"></div>
+<div id="testArea"></div></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+let currentResult='';
+function testRegex(){
+const pattern=document.getElementById('regexInput').value;
+const text=document.getElementById('testText').value;
+const replace=document.getElementById('replaceText').value;
+const resultArea=document.getElementById('resultArea');
+const testArea=document.getElementById('testArea');
+if(!pattern){testArea.textContent=text||'输入正则表达式开始测试';resultArea.textContent='';return}
+try{
+let flags='';if(document.getElementById('flagG').checked)flags+='g';if(document.getElementById('flagI').checked)flags+='i';if(document.getElementById('flagM').checked)flags+='m';
+const regex=new RegExp(pattern,flags);
+if(replace&&flags.includes('g')){
+currentResult=text.replace(regex,replace);
+testArea.textContent=currentResult;
+resultArea.textContent='替换结果';
+}else{
+const matches=text.match(regex);
+if(matches){
+const highlighted=text.replace(regex,m=>`<span class="match-highlight">${m}</span>`);
+testArea.innerHTML=highlighted;
+resultArea.textContent=`找到 ${matches.length} 个匹配`;
+}else{testArea.textContent=text;resultArea.textContent='无匹配'}
+}
+}catch(e){testArea.textContent=text;resultArea.textContent='正则错误: '+e.message}
+}
+function copyResult(){if(currentResult)navigator.clipboard.writeText(currentResult);else navigator.clipboard.writeText(document.getElementById('testArea').textContent)}
+document.getElementById('regexInput').value='\\b\\w+@\\w+\\.\\w+\\b';
+document.getElementById('testText').value='联系方式：\n邮箱 admin@example.com\n客服 support@company.co\n个人 test@test.org\n无效的 不是邮箱';
+testRegex();
+</script>
+</body>
+</html>

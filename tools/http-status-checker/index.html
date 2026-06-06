@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HTTP状态码查询 - HTTP Status Code参考工具 | DevTools</title>
+<meta name="description" content="HTTP状态码完整参考表：快速查询1xx-5xx所有状态码含义。包含常见用法和SEO相关状态码说明。">
+<meta name="keywords" content="HTTP状态码,HTTP status codes,http状态码查询,404,500,301,302,200,状态码大全">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/http-status-checker/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page" style="max-width:1000px">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / HTTP 状态码查询</div>
+<h1>📡 HTTP 状态码参考</h1>
+<p class="tool-desc">快速查询所有HTTP状态码的含义。搜索或按类别浏览，包含SEO相关说明。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<input type="text" class="tool-input" id="search" placeholder="🔍 搜索状态码… 例如：404, 301, 500" oninput="filterCodes()" style="min-height:auto">
+<div id="statusList" style="margin-top:1rem"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+const codes=[
+{cat:'1xx 信息',items:[
+{code:100,name:'Continue',desc:'请求已收到，客户端应继续发送请求体'},
+{code:101,name:'Switching Protocols',desc:'服务器同意切换协议（如WebSocket升级）'},
+{code:103,name:'Early Hints',desc:'预加载提示，用于优化页面加载速度'}]},
+{cat:'2xx 成功',items:[
+{code:200,name:'OK',desc:'请求成功。GET返回资源，POST返回处理结果'},
+{code:201,name:'Created',desc:'资源创建成功。常用于POST请求返回新资源URL'},
+{code:204,name:'No Content',desc:'请求成功但无返回内容。常用于DELETE操作'},
+{code:206,name:'Partial Content',desc:'返回部分内容。用于断点续传和大文件分块下载'}]},
+{cat:'3xx 重定向',items:[
+{code:301,name:'Moved Permanently',desc:'永久重定向。SEO权重会转移到新URL',highlight:true},
+{code:302,name:'Found (临时重定向)',desc:'临时重定向。搜索引擎不会转移权重',highlight:true},
+{code:304,name:'Not Modified',desc:'资源未修改，使用浏览器缓存。节省带宽',highlight:true},
+{code:307,name:'Temporary Redirect',desc:'临时重定向，保持HTTP方法不变'},
+{code:308,name:'Permanent Redirect',desc:'永久重定向，保持HTTP方法不变'}]},
+{cat:'4xx 客户端错误',items:[
+{code:400,name:'Bad Request',desc:'请求参数有误，服务器无法理解',highlight:true},
+{code:401,name:'Unauthorized',desc:'未认证。需要提供有效的认证凭据',highlight:true},
+{code:403,name:'Forbidden',desc:'已认证但无权访问。不同于401',highlight:true},
+{code:404,name:'Not Found',desc:'资源不存在。最常见的HTTP错误',highlight:true},
+{code:405,name:'Method Not Allowed',desc:'HTTP方法不被允许（如用GET访问POST端点）'},
+{code:408,name:'Request Timeout',desc:'请求超时。服务器等待客户端发送请求太久'},
+{code:409,name:'Conflict',desc:'请求冲突。如重复创建已存在的资源'},
+{code:410,name:'Gone',desc:'资源永久删除。比404更强的信号，建议移除链接'},
+{code:413,name:'Payload Too Large',desc:'请求体过大。需检查上传文件大小限制'},
+{code:429,name:'Too Many Requests',desc:'请求频率超限。触发限流(Rate Limiting)',highlight:true},
+{code:451,name:'Unavailable For Legal Reasons',desc:'因法律原因不可用。如政府要求的审查'}]},
+{cat:'5xx 服务端错误',items:[
+{code:500,name:'Internal Server Error',desc:'服务器内部错误。通用的服务端异常',highlight:true},
+{code:502,name:'Bad Gateway',desc:'网关/代理收到无效上游响应',highlight:true},
+{code:503,name:'Service Unavailable',desc:'服务暂时不可用。常用于维护模式',highlight:true},
+{code:504,name:'Gateway Timeout',desc:'网关超时。上游服务响应太慢',highlight:true},
+{code:507,name:'Insufficient Storage',desc:'服务器存储空间不足'},
+{code:509,name:'Bandwidth Limit Exceeded',desc:'带宽限制超出。非标准但常见'}]}];
+
+function renderCodes(filter=''){
+document.getElementById('statusList').innerHTML=codes.map(cat=>{
+const filtered=cat.items.filter(c=>!filter||c.code.toString().includes(filter)||c.name.toLowerCase().includes(filter.toLowerCase())||c.desc.includes(filter));
+if(!filtered.length)return'';
+return `<div style="margin-bottom:1.5rem"><h3 style="color:#94a3b8;font-size:.875rem;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:1px">${cat.cat}</h3>`+
+filtered.map(c=>`<div style="background:#0f172a;border-left:3px solid ${c.highlight?'#3b82f6':'#334155'};padding:.75rem 1rem;margin-bottom:.375rem;border-radius:0 8px 8px 0;display:flex;align-items:flex-start;gap:1rem">
+<div style="min-width:48px;font-weight:700;color:${c.code<200?'#94a3b8':c.code<300?'#22c55e':c.code<400?'#f59e0b':c.code<500?'#ef4444':'#ef4444'};font-family:'JetBrains Mono',monospace">${c.code}</div>
+<div><div style="color:#f1f5f9;font-weight:600">${c.name}</div><div style="color:#94a3b8;font-size:.8125rem">${c.desc}</div></div>
+${c.code===301?'<span style="background:rgba(59,130,246,.2);color:#60a5fa;font-size:.625rem;padding:.125rem .5rem;border-radius:4px">SEO重要</span>':''}
+</div>`).join('')+'</div>';
+}).join('');
+}
+function filterCodes(){renderCodes(document.getElementById('search').value)}
+renderCodes();
+</script>
+</body>
+</html>

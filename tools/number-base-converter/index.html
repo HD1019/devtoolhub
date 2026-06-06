@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>进制转换 - 二进制/八进制/十进制/十六进制在线转换 | DevTools</title>
+<meta name="description" content="免费在线进制转换工具：二进制、八进制、十进制、十六进制互转。程序员必备的数字进制计算器。">
+<meta name="keywords" content="进制转换,二进制转十进制,十六进制转换,hex converter,binary converter,程序员计算器">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/number-base-converter/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / 进制转换</div>
+<h1>🔢 进制转换器</h1>
+<p class="tool-desc">二进制、八进制、十进制、十六进制互转。输入任一进制的值，自动转换其他三种。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div style="display:grid;gap:1rem">
+<div><label>二进制 (Binary) — 0-1</label><input type="text" class="tool-input" id="binary" placeholder="例如：10101100" oninput="convertFrom('bin')" style="min-height:auto;font-family:'JetBrains Mono',monospace;font-size:1rem"></div>
+<div><label>八进制 (Octal) — 0-7</label><input type="text" class="tool-input" id="octal" placeholder="例如：254" oninput="convertFrom('oct')" style="min-height:auto;font-family:'JetBrains Mono',monospace;font-size:1rem"></div>
+<div><label>十进制 (Decimal) — 0-9</label><input type="text" class="tool-input" id="decimal" placeholder="例如：172" oninput="convertFrom('dec')" style="min-height:auto;font-family:'JetBrains Mono',monospace;font-size:1rem"></div>
+<div><label>十六进制 (Hexadecimal) — 0-F</label><input type="text" class="tool-input" id="hex" placeholder="例如：AC" oninput="convertFrom('hex')" style="min-height:auto;font-family:'JetBrains Mono',monospace;font-size:1rem"></div>
+</div>
+<div style="margin-top:1rem;background:#0f172a;border-radius:8px;padding:1rem;font-size:.75rem;color:#64748b">
+<strong>常用参考：</strong> FF=255 | 100=256 | FFFF=65535 | 0x80=128 | 0b11111111=255
+</div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+const fields={bin:document.getElementById('binary'),oct:document.getElementById('octal'),dec:document.getElementById('decimal'),hex:document.getElementById('hex')};
+let updating=false;
+function convertFrom(source){
+if(updating)return;updating=true;
+try{
+const v=fields[source].value.trim();
+let num=NaN;
+if(source==='bin')num=parseInt(v,2);
+else if(source==='oct')num=parseInt(v,8);
+else if(source==='dec')num=parseInt(v,10);
+else if(source==='hex')num=parseInt(v,16);
+if(isNaN(num)){clearOthers(source);updating=false;return}
+fields.bin.value=num.toString(2);
+fields.oct.value=num.toString(8);
+fields.dec.value=num.toString(10);
+fields.hex.value=num.toString(16).toUpperCase();
+}catch(e){}
+updating=false;
+}
+function clearOthers(src){['bin','oct','dec','hex'].filter(k=>k!==src).forEach(k=>fields[k].value='')}
+fields.dec.value='172';convertFrom('dec');
+</script>
+</body>
+</html>
