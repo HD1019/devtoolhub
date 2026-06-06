@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JSON转CSV - 在线JSON转Excel/CSV工具 | DevTools</title>
+<meta name="description" content="免费在线JSON转CSV工具：将JSON数组一键转换为CSV/Excel格式。纯浏览器本地处理，数据不上传。">
+<meta name="keywords" content="JSON转CSV,JSON to CSV,json转excel,json to excel online,数据格式转换">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/json-to-csv/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / JSON 转 CSV</div>
+<h1>📄 JSON 转 CSV</h1>
+<p class="tool-desc">将JSON对象数组转换为CSV表格格式。支持嵌套字段展平和自定义分隔符。可直接导入Excel。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div>
+<label>JSON 数组输入</label>
+<textarea id="jsonInput" placeholder='[{"name":"Alice","age":30},{"name":"Bob","age":25}]' style="min-height:250px"></textarea>
+</div>
+<div>
+<label>CSV 输出</label>
+<textarea id="csvOutput" placeholder="CSV结果…" readonly style="min-height:250px"></textarea>
+</div>
+</div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="convertJSONtoCSV()">🔄 转换</button>
+<button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('csvOutput').value)">📋 复制CSV</button>
+<button class="btn btn-secondary" onclick="downloadCSV()">⬇ 下载 .csv</button>
+</div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+function convertJSONtoCSV(){
+const raw=document.getElementById('jsonInput').value.trim();
+const out=document.getElementById('csvOutput');
+try{
+const data=JSON.parse(raw);
+if(!Array.isArray(data)){out.value='错误：请提供JSON数组格式，例如 [{"key":"value"}]';return}
+if(!data.length){out.value='错误：数组为空';return}
+const keys=Object.keys(data[0]);
+const header=keys.map(k=>'"'+k+'"').join(',');
+const rows=data.map(row=>keys.map(k=>{
+let v=row[k];
+if(v===null||v===undefined)return'';
+if(typeof v==='object')v=JSON.stringify(v);
+v=String(v);
+return v.includes(',')||v.includes('"')||v.includes('\n')?'"'+v.replace(/"/g,'""')+'"':v;
+}).join(','));
+out.value=[header,...rows].join('\n');
+}catch(e){out.value='JSON解析错误：'+e.message}
+}
+function downloadCSV(){
+const csv=document.getElementById('csvOutput').value;
+if(!csv||csv.startsWith('错误'))return;
+const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='data.csv';a.click();
+}
+document.getElementById('jsonInput').value=JSON.stringify([{name:'Alice',age:30,city:'Beijing',role:'Engineer'},{name:'Bob',age:25,city:'Shanghai',role:'Designer'},{name:'Charlie',age:35,city:'Shenzhen',role:'Manager'}],null,2);
+convertJSONtoCSV();
+</script>
+</body>
+</html>

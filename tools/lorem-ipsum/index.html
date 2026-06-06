@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lorem Ipsum生成器 - 在线占位文本生成工具 | DevTools</title>
+<meta name="description" content="免费在线Lorem Ipsum中文占位文本生成器：一键生成指定数量的段落/句子/单词。设计稿填充、排版测试必备。">
+<meta name="keywords" content="Lorem Ipsum,占位文本,假文生成器,placeholder text,lorem ipsum generator,中文乱数假文">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/lorem-ipsum/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / Lorem Ipsum 生成器</div>
+<h1>📝 Lorem Ipsum 占位文本生成器</h1>
+<p class="tool-desc">一键生成Lorem Ipsum假文和中文乱数假文。设计稿填充、排版测试、UI原型必备。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem">
+<div><label>语言</label><select id="lang" style="padding:.5rem 1rem;border-radius:8px;background:#334155;color:#e2e8f0;border:none;font-family:inherit"><option value="lorem">Lorem Ipsum (拉丁文)</option><option value="cn">中文乱数假文</option></select></div>
+<div><label>单位</label><select id="unit" style="padding:.5rem 1rem;border-radius:8px;background:#334155;color:#e2e8f0;border:none;font-family:inherit"><option value="paragraphs">段落</option><option value="sentences">句子</option><option value="words">单词</option></select></div>
+<div><label>数量</label><input type="number" id="count" value="3" min="1" max="100" style="width:80px;padding:.5rem;border-radius:8px;background:#334155;color:#e2e8f0;border:1px solid #475569;font-family:inherit;text-align:center"></div>
+<button class="btn btn-primary" onclick="generate()">🎲 生成</button>
+<button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('output').textContent)">📋 复制</button>
+</div>
+<div class="output-area" id="output" style="line-height:1.8;max-height:500px;color:#e2e8f0"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+const LOREM=['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','ut','aliquip','ex','ea','commodo','consequat','duis','aute','irure','dolor','in','reprehenderit','in','voluptate','velit','esse','cillum','dolore','eu','fugiat','nulla','pariatur','excepteur','sint','occaecat','cupidatat','non','proident','sunt','in','culpa','qui','officia','deserunt','mollit','anim','id','est','laborum'];
+const CNS=['天下','万物','生于','有','有','生于','无','道可道','非常道','名可名','非常名','无名','天地之始','有名','万物之母','故常无欲','以观其妙','常有欲','以观其徼','此两者','同出而异名','同谓之玄','玄之又玄','众妙之门','上善若水','水善利万物而不争','处众人之所恶','故几于道','居善地','心善渊','与善仁','言善信','政善治','事善能','动善时','夫唯不争','故无尤','千里之行','始于足下','合抱之木','生于毫末','九层之台','起于累土','知人者智','自知者明','胜人者有力','自胜者强','知足者富','强行者有志','不失其所者久','死而不亡者寿'];
+
+function pick(arr,n){
+const r=[];for(let i=0;i<n;i++)r.push(arr[Math.floor(Math.random()*arr.length)]);
+return r;
+}
+function generate(){
+const lang=document.getElementById('lang').value;
+const unit=document.getElementById('unit').value;
+const count=parseInt(document.getElementById('count').value)||3;
+const words=lang==='lorem'?LOREM:CNS;
+let html='';
+if(unit==='paragraphs'){
+for(let p=0;p<count;p++){
+const wc=10+Math.floor(Math.random()*30);
+const selected=pick(words,wc);
+const para=selected.join(' ')+(lang==='lorem'?'.':'。');
+html+='<p style="margin-bottom:.75rem">'+(lang==='lorem'?para.charAt(0).toUpperCase()+para.slice(1):para)+'</p>';
+}
+}else if(unit==='sentences'){
+for(let s=0;s<count;s++){
+const wc=5+Math.floor(Math.random()*15);
+html+=(lang==='lorem'?pick(words,wc).join(' ').charAt(0).toUpperCase()+pick(words,wc).join(' ').slice(1)+'. ':pick(words,wc).join('')+'。');
+}
+}else{
+html=pick(words,count).join(' ')+(lang==='lorem'?'.':'。');
+}
+document.getElementById('output').innerHTML=html;
+}
+generate();
+</script>
+</body>
+</html>

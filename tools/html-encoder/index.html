@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HTML实体编码 - 在线HTML Encode/Decode工具 | DevTools</title>
+<meta name="description" content="免费在线HTML实体编解码工具：HTML特殊字符转义与反转义。<>&等特殊符号一键转换。">
+<meta name="keywords" content="HTML编码,HTML实体,HTML encode,HTML decode,html实体转换,html转义">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/html-encoder/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / HTML实体编码</div>
+<h1>🏷 HTML 实体编码 / 解码</h1>
+<p class="tool-desc">HTML特殊字符转义与反转义。&lt; → &amp;lt; 等转换，防止XSS或嵌入HTML。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div class="btn-group">
+<button class="btn btn-primary" onclick="encodeHTML()">🔒 HTML编码 (Escape)</button>
+<button class="btn btn-primary" onclick="decodeHTML()">🔓 HTML解码 (Unescape)</button>
+<button class="btn btn-secondary" onclick="swapIO()">🔄 交换</button>
+<button class="btn btn-secondary" onclick="copyOut()">📋 复制结果</button>
+<button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div><label>输入</label><textarea id="input" placeholder="输入HTML代码…"><div class="example">Hello & Welcome</div></textarea></div>
+<div><label>输出</label><textarea id="output" placeholder="结果…" readonly></textarea></div>
+</div>
+<div style="margin-top:1rem;color:#94a3b8;font-size:.75rem">
+<strong>常用实体参考：</strong>
+&lt; → &amp;lt; | &gt; → &amp;gt; | &amp; → &amp;amp; | " → &amp;quot; | ' → &amp;#39; | © → &amp;copy; | ® → &amp;reg; | ™ → &amp;trade;
+</div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+const inp=document.getElementById('input'),out=document.getElementById('output');
+function encodeHTML(){
+const map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+out.value=inp.value.replace(/[&<>"']/g,c=>map[c]);
+}
+function decodeHTML(){
+const txt=document.createElement('textarea');
+txt.innerHTML=inp.value;
+out.value=txt.value;
+}
+function swapIO(){[inp.value,out.value]=[out.value,inp.value]}
+function copyOut(){if(out.value)navigator.clipboard.writeText(out.value)}
+function clearAll(){inp.value='';out.value=''}
+encodeHTML();
+</script>
+</body>
+</html>

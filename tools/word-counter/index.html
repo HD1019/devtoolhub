@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>字数统计 - 在线字数/字符/行数统计工具 | DevTools</title>
+<meta name="description" content="免费在线字数统计工具：实时统计中英文字数、字符数、行数、段落数。纯浏览器本地处理。">
+<meta name="keywords" content="字数统计,字符统计,word counter,在线数字数,文章字数">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/word-counter/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / 字数统计</div>
+<h1>📊 字数统计</h1>
+<p class="tool-desc">粘贴文本，实时统计字数、字符数、行数、段落数、空格数。支持中英文混合计数。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<textarea id="input" placeholder="粘贴或输入文本…" oninput="countAll()" style="min-height:280px"></textarea>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:1rem">
+<div style="background:#0f172a;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#3b82f6" id="wordCount">0</div><div style="color:#94a3b8;font-size:.75rem;margin-top:.25rem">字数 (中+英)</div></div>
+<div style="background:#0f172a;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#22c55e" id="charCount">0</div><div style="color:#94a3b8;font-size:.75rem;margin-top:.25rem">字符数</div></div>
+<div style="background:#0f172a;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#f59e0b" id="lineCount">0</div><div style="color:#94a3b8;font-size:.75rem;margin-top:.25rem">行数</div></div>
+<div style="background:#0f172a;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#8b5cf6" id="paraCount">0</div><div style="color:#94a3b8;font-size:.75rem;margin-top:.25rem">段落数</div></div>
+<div style="background:#0f172a;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#ec4899" id="spaceCount">0</div><div style="color:#94a3b8;font-size:.75rem;margin-top:.25rem">空格数</div></div>
+<div style="background:#0f172a;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#e2e8f0" id="byteSize">0 B</div><div style="color:#94a3b8;font-size:.75rem;margin-top:.25rem">字节大小</div></div>
+</div>
+<button class="btn btn-secondary" style="margin-top:1rem" onclick="clearAll()">🗑 清空</button>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+function countAll(){
+const t=document.getElementById('input').value;
+const cnChars=(t.match(/[一-鿿]/g)||[]).length;
+const enWords=(t.match(/[a-zA-Z]+/g)||[]).length;
+document.getElementById('wordCount').textContent=cnChars+enWords;
+document.getElementById('charCount').textContent=t.length;
+document.getElementById('lineCount').textContent=t.split('\n').length;
+document.getElementById('paraCount').textContent=t.split(/\n\s*\n/).filter(p=>p.trim()).length || (t.trim()?1:0);
+document.getElementById('spaceCount').textContent=(t.match(/\s/g)||[]).length;
+const bytes=new Blob([t]).size;
+document.getElementById('byteSize').textContent=bytes<1024?bytes+' B':(bytes/1024).toFixed(1)+' KB';
+}
+function clearAll(){document.getElementById('input').value='';countAll()}
+document.getElementById('input').value='欢迎使用 DevTools 字数统计工具。\n\n这是一个示例段落，用于展示统计功能。\n\n支持中英文混合计数：Hello World! 你好世界！\n\nThis is the second paragraph with English text for testing purposes.';
+countAll();
+</script>
+</body>
+</html>
