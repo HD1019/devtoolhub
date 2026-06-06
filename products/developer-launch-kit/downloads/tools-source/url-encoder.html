@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>URL编解码 - 在线URL编码解码工具 | DevTools</title>
+<meta name="description" content="免费在线URL编解码工具：URL Encode/Decode一键转换，支持完整URI组件编码。开发者必备。">
+<meta name="keywords" content="URL编码,URL解码,URL encode,URL decode,url encoder online,url解码">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/url-encoder/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul>
+</nav>
+<main class="tool-page">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / URL 编解码</div>
+  <h1>🔗 URL 编码 & 解码</h1>
+  <p class="tool-desc">在线URL编码（Encode）和解码（Decode）工具。支持普通编码和完整URI组件编码。</p>
+  <div class="ad-slot">广告位</div>
+  <div class="tool-workspace">
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="encodeUrl()">🔒 URL编码</button>
+      <button class="btn btn-primary" onclick="decodeUrl()">🔓 URL解码</button>
+      <button class="btn btn-secondary" onclick="encodeURIComponentFn()">🔒 完整编码 (encodeURIComponent)</button>
+      <button class="btn btn-secondary" onclick="decodeURIComponentFn()">🔓 完整解码 (decodeURIComponent)</button>
+      <button class="btn btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+      <button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div><label>输入</label><textarea id="input" placeholder="输入文本或URL…"></textarea></div>
+      <div><label>输出</label><textarea id="output" placeholder="结果…" readonly></textarea></div>
+    </div>
+  </div>
+  <div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a> · 编解码在浏览器本地完成</p></footer>
+<script>
+const inp=document.getElementById('input'),out=document.getElementById('output');
+function encodeUrl(){try{out.value=encodeURI(inp.value)}catch(e){out.value='错误: '+e.message}}
+function decodeUrl(){try{out.value=decodeURI(inp.value)}catch(e){out.value='错误: 无效的URL编码字符串'}}
+function encodeURIComponentFn(){try{out.value=encodeURIComponent(inp.value)}catch(e){out.value='错误: '+e.message}}
+function decodeURIComponentFn(){try{out.value=decodeURIComponent(inp.value)}catch(e){out.value='错误: 无效的编码字符串'}}
+function copyOutput(){if(out.value)navigator.clipboard.writeText(out.value)}
+function clearAll(){inp.value='';out.value=''}
+inp.value='https://example.com/search?q=你好世界&lang=zh';
+encodeUrl();
+</script>
+</body>
+</html>

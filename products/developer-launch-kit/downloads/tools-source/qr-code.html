@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>二维码生成器 - 免费在线QR码生成工具 | DevTools</title>
+<meta name="description" content="免费在线二维码生成器：输入文字或网址即可生成QR码，支持下载PNG。可调尺寸和颜色。">
+<meta name="keywords" content="二维码生成,QR码,二维码在线,QR code generator,二维码制作">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/qr-code/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links">
+    <li><a href="/devtoolhub/">首页</a></li>
+    <li><a href="/devtoolhub/#tools">工具</a></li>
+  </ul>
+</nav>
+
+<main class="tool-page">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / 二维码生成器</div>
+  <h1>📱 二维码生成器</h1>
+  <p class="tool-desc">输入文字或网址，立即生成真实可扫的二维码。支持自定义尺寸，可下载PNG图片。</p>
+
+  <div class="ad-slot">广告位</div>
+
+  <div class="tool-workspace">
+    <input type="text" class="tool-input" id="qrText" placeholder="输入文本或网址… 例如：https://example.com" oninput="updateQR()">
+    <div style="display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap;align-items:center">
+      <div>
+        <label>尺寸</label>
+        <select id="qrSize" onchange="updateQR()" style="padding:.5rem 1rem;border-radius:8px;background:#334155;color:#e2e8f0;border:none;cursor:pointer;font-family:inherit">
+          <option value="200">200×200</option>
+          <option value="300" selected>300×300</option>
+          <option value="400">400×400</option>
+          <option value="500">500×500</option>
+        </select>
+      </div>
+      <div>
+        <label>前景色</label>
+        <input type="color" id="fgColor" value="#000000" onchange="updateQR()" style="width:36px;height:36px;border:none;border-radius:8px;cursor:pointer">
+      </div>
+      <div>
+        <label>背景色</label>
+        <input type="color" id="bgColor" value="#FFFFFF" onchange="updateQR()" style="width:36px;height:36px;border:none;border-radius:8px;cursor:pointer">
+      </div>
+      <button class="btn btn-primary" onclick="downloadQR()">⬇ 下载PNG</button>
+    </div>
+    <div style="text-align:center;padding:1.5rem 0;background:#fff;border-radius:12px;min-height:200px;display:flex;align-items:center;justify-content:center" id="qrContainer">
+      <img id="qrImage" src="" alt="QR Code" style="display:none;max-width:100%">
+      <p style="color:#94a3b8" id="qrPlaceholder">输入内容即可生成二维码</p>
+    </div>
+  </div>
+
+  <div class="ad-slot">广告位</div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 <a href="/devtoolhub/">DevTools</a> · QR码通过API实时生成</p>
+</footer>
+
+<script>
+function updateQR() {
+  const text = document.getElementById('qrText').value.trim();
+  const img = document.getElementById('qrImage');
+  const placeholder = document.getElementById('qrPlaceholder');
+  const size = document.getElementById('qrSize').value;
+  const fg = document.getElementById('fgColor').value.replace('#', '');
+  const bg = document.getElementById('bgColor').value.replace('#', '');
+
+  if (!text) {
+    img.style.display = 'none';
+    placeholder.style.display = '';
+    return;
+  }
+
+  img.style.display = '';
+  placeholder.style.display = 'none';
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&color=${fg}&bgcolor=${bg}&format=png`;
+  img.alt = 'QR Code: ' + text;
+}
+
+function downloadQR() {
+  const img = document.getElementById('qrImage');
+  if (!img.src) return;
+  fetch(img.src)
+    .then(r => r.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'qrcode.png'; a.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch(() => {
+      // Fallback: open in new tab
+      window.open(img.src, '_blank');
+    });
+}
+
+// Init with default
+document.getElementById('qrText').value = 'https://HD1019.github.io/devtoolhub/';
+updateQR();
+</script>
+</body>
+</html>

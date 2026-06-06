@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>在线图片压缩 - 免费压缩PNG/JPG/WebP | DevTools</title>
+<meta name="description" content="免费在线图片压缩工具：拖拽图片即可压缩，可调节压缩质量。纯浏览器本地处理，图片不上传服务器，保护隐私。支持PNG、JPG、WebP。">
+<meta name="keywords" content="图片压缩,在线压缩,压缩PNG,压缩JPG,压缩WebP,图片优化,compress image online">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/image-compressor/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links">
+    <li><a href="/devtoolhub/">首页</a></li>
+    <li><a href="/devtoolhub/#tools">工具</a></li>
+  </ul>
+</nav>
+
+<main class="tool-page">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / 图片压缩</div>
+  <h1>🖼 图片压缩</h1>
+  <p class="tool-desc">拖拽图片到下方区域，调节质量滑块，一键下载压缩后的图片。纯浏览器本地处理，图片不会上传。</p>
+
+  <div class="ad-slot">广告位</div>
+
+  <div class="tool-workspace">
+    <div class="file-drop" id="dropZone">
+      <div class="icon">📁</div>
+      <p>拖拽图片到此处，或点击选择文件</p>
+      <p style="font-size:.75rem;color:#64748b;margin-top:.5rem">支持 PNG / JPG / WebP · 最大 20MB</p>
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none">
+    </div>
+
+    <div style="margin:1rem 0">
+      <label>压缩质量：<strong id="qualityVal">80%</strong></label>
+      <input type="range" class="slider" id="quality" min="10" max="100" value="80" oninput="document.getElementById('qualityVal').textContent=this.value+'%'">
+    </div>
+
+    <div id="result" style="display:none">
+      <img id="preview" class="preview-img" alt="Preview">
+      <div class="compare">
+        <div class="compare-box">
+          <div class="label">原始大小</div>
+          <div class="size" id="origSize">-</div>
+        </div>
+        <div class="compare-box">
+          <div class="label">压缩后</div>
+          <div class="size" id="newSize">-</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="downloadImage()">⬇ 下载压缩图片</button>
+    </div>
+  </div>
+
+  <div class="ad-slot">广告位</div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 <a href="/devtoolhub/">DevTools</a> · 图片处理在浏览器本地完成 · 不上传服务器</p>
+</footer>
+
+<script>
+let compressedBlob = null;
+let compressedName = '';
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const qualityInput = document.getElementById('quality');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+function handleFile(file) {
+  if (!file) return;
+  if (file.size > 20 * 1024 * 1024) { alert('文件不能超过 20MB'); return; }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      document.getElementById('origSize').textContent = formatSize(file.size);
+      compress(img, file.name);
+    };
+    img.src = e.target.result;
+    document.getElementById('preview').src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('result').style.display = 'block';
+}
+
+function compress(img, name) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const quality = qualityInput.value / 100;
+  const ext = name.split('.').pop().toLowerCase();
+  const mimeType = ext === 'webp' ? 'image/webp' : ext === 'png' ? 'image/png' : 'image/jpeg';
+
+  canvas.toBlob(blob => {
+    compressedBlob = blob;
+    compressedName = name.replace(/\.\w+$/, '_compressed.' + (ext === 'png' ? 'png' : 'jpg'));
+    document.getElementById('newSize').textContent = formatSize(blob.size);
+    document.getElementById('preview').src = URL.createObjectURL(blob);
+  }, mimeType, quality);
+}
+
+qualityInput.addEventListener('input', () => {
+  const img = document.getElementById('preview');
+  if (img.src) compress({width:img.naturalWidth, height:img.naturalHeight}, compressedName || 'image.jpg');
+});
+
+function downloadImage() {
+  if (!compressedBlob) return;
+  const url = URL.createObjectURL(compressedBlob);
+  const a = document.createElement('a');
+  a.href = url; a.download = compressedName; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+</script>
+</body>
+</html>

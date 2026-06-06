@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JSON格式化 & 验证 - 在线JSON美化压缩工具 | DevTools</title>
+<meta name="description" content="免费在线JSON格式化工具：JSON美化、压缩、语法验证。纯浏览器本地处理，代码不上传。支持大文件格式化。">
+<meta name="keywords" content="JSON格式化,JSON验证,JSON美化,JSON压缩,json formatter,json validator">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/json-formatter/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links">
+    <li><a href="/devtoolhub/">首页</a></li>
+    <li><a href="/devtoolhub/#tools">工具</a></li>
+  </ul>
+</nav>
+
+<main class="tool-page">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / JSON 格式化 & 验证</div>
+  <h1>📋 JSON 格式化 & 验证</h1>
+  <p class="tool-desc">粘贴JSON代码，一键格式化美化、压缩或验证语法。所有处理在浏览器本地完成。</p>
+
+  <div class="ad-slot">广告位</div>
+
+  <div class="tool-workspace">
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="formatJSON()">✨ 格式化</button>
+      <button class="btn btn-secondary" onclick="minifyJSON()">📦 压缩</button>
+      <button class="btn btn-secondary" onclick="validateJSON()">✅ 验证</button>
+      <button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+      <button class="btn btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+    </div>
+    <textarea id="input" placeholder='粘贴 JSON 代码… 例如：{"name":"DevTools","tools":["json","image","qr"]}'></textarea>
+    <div class="output-area" id="output" style="color:#64748b">格式化/压缩后的结果会显示在这里…</div>
+  </div>
+
+  <div class="ad-slot">广告位</div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 <a href="/devtoolhub/">DevTools</a> · JSON处理在浏览器本地完成 · 代码不上传</p>
+</footer>
+
+<script>
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+
+function setOutput(text, isError) {
+  output.textContent = text;
+  output.style.color = isError ? '#f87171' : '#e2e8f0';
+}
+
+function formatJSON() {
+  try {
+    const obj = JSON.parse(input.value);
+    setOutput(JSON.stringify(obj, null, 2));
+  } catch(e) {
+    setOutput('❌ JSON 解析错误：' + e.message, true);
+  }
+}
+
+function minifyJSON() {
+  try {
+    const obj = JSON.parse(input.value);
+    setOutput(JSON.stringify(obj));
+  } catch(e) {
+    setOutput('❌ JSON 解析错误：' + e.message, true);
+  }
+}
+
+function validateJSON() {
+  try {
+    const obj = JSON.parse(input.value);
+    const keys = countKeys(obj);
+    setOutput('✅ 有效的 JSON\n\n' +
+      '类型：' + (Array.isArray(obj) ? 'Array' : typeof obj === 'object' ? 'Object' : typeof obj) + '\n' +
+      '键数量：' + keys + '\n' +
+      '大小：' + (new Blob([input.value]).size / 1024).toFixed(2) + ' KB');
+  } catch(e) {
+    setOutput('❌ 无效的 JSON：' + e.message, true);
+  }
+}
+
+function countKeys(obj) {
+  if (typeof obj !== 'object' || obj === null) return 0;
+  let count = 0;
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      count++;
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        count += countKeys(obj[key]);
+      }
+    }
+  }
+  return count;
+}
+
+function clearAll() { input.value = ''; output.textContent = '已清空'; output.style.color = '#64748b'; }
+
+function copyOutput() {
+  if (!output.textContent || output.style.color === 'rgb(248, 113, 113)') return;
+  navigator.clipboard.writeText(output.textContent).then(() => {
+    const orig = output.textContent;
+    output.textContent = '✅ 已复制到剪贴板！';
+    output.style.color = '#4ade80';
+    setTimeout(() => { output.textContent = orig; output.style.color = '#e2e8f0'; }, 1500);
+  });
+}
+
+// Support loading sample
+input.value = '{"name":"DevTools","version":"1.0","tools":[{"id":"json","label":"JSON Formatter"},{"id":"img","label":"Image Compressor"}],"free":true}';
+formatJSON();
+</script>
+</body>
+</html>
