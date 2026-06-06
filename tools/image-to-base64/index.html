@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>图片转Base64 - 在线图片Base64编码工具 | DevTools</title>
+<meta name="description" content="免费在线图片转Base64工具：上传图片一键生成Base64编码字符串。支持直接预览和复制，纯浏览器本地处理。">
+<meta name="keywords" content="图片转Base64,image to base64,picture to base64,图片编码,base64 image">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/image-to-base64/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / 图片转 Base64</div>
+<h1>🖼 图片转 Base64</h1>
+<p class="tool-desc">上传图片，自动转换为Base64编码。可复制Data URI直接嵌入HTML/CSS。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div class="file-drop" id="dropZone">
+<div class="icon">📁</div><p>拖拽图片到此处或点击选择</p>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+</div>
+<div style="margin-top:1rem"><label>Base64 结果</label>
+<textarea id="output" readonly placeholder="选择图片后自动生成…" style="min-height:150px;font-size:.75rem"></textarea></div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="copyResult()">📋 复制Base64</button>
+<button class="btn btn-secondary" onclick="copyDataURI()">📋 复制Data URI</button>
+</div>
+<div id="preview" style="margin-top:1rem"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a> · 图片在浏览器本地转换 · 不上传</p></footer>
+<script>
+const dropZone=document.getElementById('dropZone'),fileInput=document.getElementById('fileInput'),output=document.getElementById('output');
+let dataURI='';
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover');handleFile(e.dataTransfer.files[0])});
+fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
+function handleFile(file){
+if(!file)return;
+const reader=new FileReader();
+reader.onload=function(e){
+dataURI=e.target.result;
+const base64=dataURI.split(',')[1];
+output.value=base64;
+document.getElementById('preview').innerHTML=`<img src="${dataURI}" style="max-width:100%;max-height:300px;border-radius:8px">`;
+};
+reader.readAsDataURL(file);
+}
+function copyResult(){if(output.value)navigator.clipboard.writeText(output.value)}
+function copyDataURI(){if(dataURI)navigator.clipboard.writeText(dataURI)}
+</script>
+</body>
+</html>
