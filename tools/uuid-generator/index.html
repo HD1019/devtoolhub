@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UUID生成器 - 在线GUID/UUID随机生成工具 | DevTools</title>
+<meta name="description" content="免费在线UUID/GUID生成器：一键生成UUID v4随机标识符，支持批量生成和复制。纯浏览器本地生成。">
+<meta name="keywords" content="UUID生成器,GUID生成,UUID在线,generate UUID online,UUID v4">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/uuid-generator/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul>
+</nav>
+<main class="tool-page">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / UUID 生成器</div>
+  <h1>🆔 UUID / GUID 生成器</h1>
+  <p class="tool-desc">一键生成UUID v4（随机）标识符。适合用作数据库主键、文件名、Token等唯一标识。</p>
+  <div class="ad-slot">广告位</div>
+  <div class="tool-workspace">
+    <button class="btn btn-primary" onclick="generateUUID()" style="margin-bottom:1rem">🎲 生成一个 UUID</button>
+    <input type="text" class="tool-input" id="uuidOutput" readonly style="font-size:1.125rem;font-family:'JetBrains Mono',monospace;text-align:center;min-height:auto;padding:1rem">
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="copyUUID()">📋 复制</button>
+      <button class="btn btn-secondary" onclick="generateMultiple()">📦 批量生成50个</button>
+    </div>
+    <div id="multiList" style="margin-top:1rem"></div>
+  </div>
+  <div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a> · UUID在浏览器本地生成 · 不上传数据</p></footer>
+<script>
+function generateUUID() {
+  // Crypto-safe UUID v4
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  arr[6] = (arr[6] & 0x0f) | 0x40; // version 4
+  arr[8] = (arr[8] & 0x3f) | 0x80; // variant
+  const hex = Array.from(arr, b => b.toString(16).padStart(2,'0'));
+  const uuid = [hex.slice(0,4).join(''),hex.slice(4,6).join(''),hex.slice(6,8).join(''),hex.slice(8,10).join(''),hex.slice(10).join('')].join('-');
+  document.getElementById('uuidOutput').value = uuid;
+  return uuid;
+}
+function copyUUID() {
+  const v = document.getElementById('uuidOutput').value;
+  if (v) navigator.clipboard.writeText(v).then(() => {
+    const btn = event.target; btn.textContent = '✅ 已复制';
+    setTimeout(() => btn.textContent = '📋 复制', 1500);
+  });
+}
+function generateMultiple() {
+  const uuids = Array.from({length:50}, generateUUID);
+  document.getElementById('multiList').innerHTML = '<div class="output-area">' +
+    uuids.map((u,i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:.25rem 0;border-bottom:1px solid #1e293b"><span style="color:#64748b;font-size:.75rem;min-width:2rem">${i+1}</span><code style="color:#e2e8f0;font-size:.75rem">${u}</code><button class="copy-btn" onclick="navigator.clipboard.writeText(\'${u}\')">复制</button></div>`).join('') +
+    '</div>';
+}
+generateUUID();
+</script>
+</body>
+</html>

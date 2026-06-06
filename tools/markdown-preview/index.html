@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Markdown预览器 - 在线Markdown编辑预览工具 | DevTools</title>
+<meta name="description" content="免费在线Markdown编辑器：实时预览Markdown渲染效果，支持GitHub风格语法。写README、文档、笔记必备。">
+<meta name="keywords" content="Markdown预览,Markdown编辑器,在线Markdown,markdown preview,markdown editor online">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/markdown-preview/">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.md-preview{padding:2rem;background:#fff;color:#1e293b;border-radius:12px;min-height:200px;line-height:1.8}
+.md-preview h1{font-size:2rem;border-bottom:2px solid #e2e8f0;padding-bottom:.5rem;margin-bottom:1rem}
+.md-preview h2{font-size:1.5rem;margin-top:1.5rem}
+.md-preview code{background:#f1f5f9;padding:.125rem .375rem;border-radius:4px;font-size:.875rem}
+.md-preview pre{background:#1e293b;color:#e2e8f0;padding:1rem;border-radius:8px;overflow-x:auto}
+.md-preview pre code{background:transparent;color:inherit;padding:0}
+.md-preview table{border-collapse:collapse;width:100%;margin:1rem 0}
+.md-preview th,.md-preview td{border:1px solid #e2e8f0;padding:.5rem 1rem;text-align:left}
+.md-preview th{background:#f8fafc}
+.md-preview blockquote{border-left:4px solid #3b82f6;padding-left:1rem;color:#64748b;margin:1rem 0}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul>
+</nav>
+<main class="tool-page" style="max-width:1200px">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / Markdown 预览器</div>
+  <h1>📝 Markdown 预览器</h1>
+  <p class="tool-desc">左侧编写Markdown，右侧实时预览渲染效果。支持GitHub Flavored Markdown语法。</p>
+  <div class="ad-slot">广告位</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+    <div>
+      <label>Markdown 输入</label>
+      <textarea id="mdInput" oninput="renderMarkdown()" style="min-height:500px;height:500px"></textarea>
+    </div>
+    <div>
+      <label>预览</label>
+      <div class="output-area md-preview" id="mdPreview" style="min-height:500px;max-height:none"></div>
+    </div>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="copyHTML()">📋 复制HTML</button>
+    <button class="btn btn-secondary" onclick="clearMD()">🗑 清空</button>
+  </div>
+  <div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+const mdInput=document.getElementById('mdInput'),mdPreview=document.getElementById('mdPreview');
+function renderMarkdown(){
+  if(typeof marked==='undefined'){
+    mdPreview.innerHTML='<p style="color:#ef4444">Markdown渲染库加载中，请刷新页面重试。</p>';
+    return;
+  }
+  try{
+    marked.setOptions({breaks:true,gfm:true});
+    mdPreview.innerHTML=marked.parse(mdInput.value||'');
+  }catch(e){
+    mdPreview.innerHTML='<p style="color:#ef4444">渲染错误：'+e.message+'</p>';
+  }
+}
+function copyHTML(){navigator.clipboard.writeText(mdPreview.innerHTML)}
+function clearMD(){mdInput.value='';mdPreview.innerHTML=''}
+mdInput.value=`# Markdown 预览器
+
+## 欢迎使用
+
+这是一个**在线Markdown编辑器**，支持：
+
+- ✅ 标题、粗体、斜体
+- ✅ 代码块和行内代码
+- ✅ 有序/无序列表
+- ✅ 表格
+- ✅ 引用块
+
+### 代码示例
+
+\`\`\`javascript
+function hello() {
+  console.log("Hello, DevTools!");
+}
+\`\`\`
+
+### 表格示例
+
+| 工具 | 功能 | 状态 |
+|------|------|------|
+| JSON格式化 | 美化压缩 | ✅ |
+| 图片压缩 | 本地处理 | ✅ |
+
+> 这是一个引用块。Markdown让写作更高效。
+
+[访问DevTools](https://HD1019.github.io/devtoolhub/)`;
+renderMarkdown();
+</script>
+</body>
+</html>
