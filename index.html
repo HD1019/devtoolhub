@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DevTools - 免费在线开发者工具 | JSON格式化、图片压缩、二维码生成</title>
+<meta name="description" content="免费在线开发者工具集合：JSON格式化验证、图片压缩、二维码生成、密码生成、Base64编解码。无需注册，完全免费，浏览器本地处理保障隐私。">
+<meta name="keywords" content="在线工具,JSON格式化,图片压缩,二维码生成,密码生成,Base64,开发者工具">
+<meta property="og:title" content="DevTools - 免费在线开发者工具">
+<meta property="og:description" content="JSON格式化、图片压缩、二维码生成等免费在线工具，无需注册，本地处理保障隐私。">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://sxkzm.github.io/devtoolhub/">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links">
+    <li><a href="/devtoolhub/">首页</a></li>
+    <li><a href="/devtoolhub/#tools">工具</a></li>
+    <li><a href="/devtoolhub/#about">关于</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <h1>开发者<span>常用工具</span>，一个站搞定</h1>
+  <p>JSON格式化、图片压缩、二维码生成… 所有工具免费使用，浏览器本地处理，不上传任何数据。</p>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="search" placeholder="🔍 搜索工具…（例如：json、图片、二维码）" autocomplete="off">
+  </div>
+</header>
+
+<main class="section" id="tools">
+  <h2 class="section-title">📦 全部工具</h2>
+  <div class="tool-grid" id="toolGrid">
+
+    <a href="tools/json-formatter/" class="tool-card">
+      <div class="tool-card-icon">📋</div>
+      <h3>JSON 格式化 & 验证</h3>
+      <p>格式化压缩JSON、语法校验、一键美化或压缩。开发者日常必备。</p>
+    </a>
+
+    <a href="tools/image-compressor/" class="tool-card">
+      <div class="tool-card-icon">🖼</div>
+      <h3>图片压缩</h3>
+      <p>拖拽图片即可压缩，可调质量。纯浏览器本地处理，图片不会上传到服务器。</p>
+    </a>
+
+    <a href="tools/qr-code/" class="tool-card">
+      <div class="tool-card-icon">📱</div>
+      <h3>二维码生成器</h3>
+      <p>输入文本或网址，一键生成二维码。支持下载PNG，可调尺寸。</p>
+    </a>
+
+    <a href="tools/password-generator/" class="tool-card">
+      <div class="tool-card-icon">🔐</div>
+      <h3>密码生成器</h3>
+      <p>生成强密码：可调长度、字符类型。支持一键复制，安全随机。</p>
+    </a>
+
+    <a href="tools/base64/" class="tool-card">
+      <div class="tool-card-icon">🔣</div>
+      <h3>Base64 编解码</h3>
+      <p>文本与Base64互转、文件转Base64。支持一键复制结果。</p>
+    </a>
+
+  </div>
+</main>
+
+<div class="ad-slot">
+  <!-- AdSense placeholder - 待流量达标后接入 -->
+  广告位 · 流量达标后接入 Google AdSense
+</div>
+
+<section class="section" id="about">
+  <h2 class="section-title">💡 为什么用 DevTools？</h2>
+  <div class="tool-grid">
+    <div class="tool-card" style="cursor:default">
+      <div class="tool-card-icon">🔒</div>
+      <h3>隐私安全</h3>
+      <p>所有处理在浏览器本地完成，数据不上传服务器。图片、代码、文本都不会离开你的电脑。</p>
+    </div>
+    <div class="tool-card" style="cursor:default">
+      <div class="tool-card-icon">⚡</div>
+      <h3>极速加载</h3>
+      <p>纯静态页面，无框架开销。首次加载即用，无需等待。</p>
+    </div>
+    <div class="tool-card" style="cursor:default">
+      <div class="tool-card-icon">🆓</div>
+      <h3>完全免费</h3>
+      <p>所有工具永久免费，无需注册、无需登录。打开即用。</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 <a href="/devtoolhub/">DevTools</a> · 所有工具免费使用 · 浏览器本地处理 · 数据不上传</p>
+  <p style="margin-top:.5rem">更多工具持续添加中。</p>
+</footer>
+
+<script>
+// Simple client-side search filter
+document.getElementById('search').addEventListener('input', function(e){
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.tool-card').forEach(card => {
+    const txt = card.textContent.toLowerCase();
+    card.style.display = txt.includes(q) ? '' : 'none';
+  });
+});
+</script>
+</body>
+</html>

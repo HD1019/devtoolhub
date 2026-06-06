@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sxkzm.github.io/devtoolhub/sitemap.xml

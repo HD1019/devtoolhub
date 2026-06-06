@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Base64 编解码 - 在线Base64加密解密工具 | DevTools</title>
+<meta name="description" content="免费在线Base64编解码工具：文本转Base64、Base64解码、文件转Base64编码。纯浏览器本地处理，数据安全不上传。">
+<meta name="keywords" content="Base64编码,Base64解码,Base64加密,Base64解密,base64 encode decode,base64在线">
+<link rel="canonical" href="https://sxkzm.github.io/devtoolhub/tools/base64/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a>
+  <ul class="nav-links">
+    <li><a href="/devtoolhub/">首页</a></li>
+    <li><a href="/devtoolhub/#tools">工具</a></li>
+  </ul>
+</nav>
+
+<main class="tool-page">
+  <div class="breadcrumb"><a href="/devtoolhub/">首页</a> / Base64 编解码</div>
+  <h1>🔣 Base64 编解码</h1>
+  <p class="tool-desc">文本⇄Base64互转、文件转Base64编码。所有处理在浏览器本地完成，数据不会上传到服务器。</p>
+
+  <div class="ad-slot">广告位</div>
+
+  <div class="tool-workspace">
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="encodeText()">🔒 编码 (Encode)</button>
+      <button class="btn btn-primary" onclick="decodeText()">🔓 解码 (Decode)</button>
+      <button class="btn btn-secondary" onclick="swapInputOutput()">🔄 交换</button>
+      <button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+      <button class="btn btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div>
+        <label>输入</label>
+        <textarea id="input" placeholder="输入要编码/解码的文本…"></textarea>
+      </div>
+      <div>
+        <label>输出</label>
+        <textarea id="output" placeholder="结果将显示在这里…" readonly></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #334155">
+      <label>📎 文件转 Base64</label>
+      <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem">
+        <input type="file" id="fileInput" style="display:none" onchange="fileToBase64()">
+        <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">选择文件</button>
+        <span id="fileInfo" style="color:#94a3b8;font-size:.8125rem"></span>
+      </div>
+      <div class="output-area" id="fileOutput" style="display:none;margin-top:.5rem;max-height:300px;overflow:auto;word-break:break-all"></div>
+    </div>
+  </div>
+
+  <div class="ad-slot">广告位</div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 <a href="/devtoolhub/">DevTools</a> · Base64编解码在浏览器本地完成 · 数据不上传</p>
+</footer>
+
+<script>
+function encodeText() {
+  try {
+    document.getElementById('output').value = btoa(unescape(encodeURIComponent(document.getElementById('input').value)));
+  } catch(e) {
+    document.getElementById('output').value = '编码失败：' + e.message;
+  }
+}
+
+function decodeText() {
+  try {
+    document.getElementById('output').value = decodeURIComponent(escape(atob(document.getElementById('input').value.trim())));
+  } catch(e) {
+    document.getElementById('output').value = '解码失败：输入可能不是有效的Base64字符串';
+  }
+}
+
+function swapInputOutput() {
+  const input = document.getElementById('input');
+  const output = document.getElementById('output');
+  [input.value, output.value] = [output.value, input.value];
+}
+
+function clearAll() {
+  document.getElementById('input').value = '';
+  document.getElementById('output').value = '';
+}
+
+function copyOutput() {
+  const val = document.getElementById('output').value;
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    const orig = document.getElementById('output').placeholder;
+    document.getElementById('output').placeholder = '✅ 已复制！';
+    setTimeout(() => { document.getElementById('output').placeholder = orig; }, 1500);
+  });
+}
+
+function fileToBase64() {
+  const file = document.getElementById('fileInput').files[0];
+  if (!file) return;
+  document.getElementById('fileInfo').textContent = file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    const output = document.getElementById('fileOutput');
+    output.style.display = 'block';
+    // Show first 500 chars with a note
+    output.textContent = base64.length > 1000
+      ? base64.substring(0, 500) + '\n\n…（共' + base64.length.toLocaleString() + '字符，截断显示前500字符）'
+      : base64;
+
+    // Also put full in output textarea
+    document.getElementById('output').value = base64;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Sample
+document.getElementById('input').value = 'Hello, DevTools! 你好，开发者工具！';
+</script>
+</body>
+</html>
