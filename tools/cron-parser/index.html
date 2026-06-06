@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cron表达式解析 - 在线Cron表达式验证工具 | DevTools</title>
+<meta name="description" content="免费在线Cron表达式解析器：输入Cron表达式，立即查看下一次执行时间和人类可读描述。支持5位和6位格式。">
+<meta name="keywords" content="Cron表达式,cron parser,cron验证,crontab工具,cron表达式解析,定时任务">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/cron-parser/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / Cron 表达式解析器</div>
+<h1>⏰ Cron 表达式解析器</h1>
+<p class="tool-desc">输入Cron表达式，查看人类可读描述和接下来5次执行时间。支持5位和6位（含秒）格式。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<input type="text" class="tool-input" id="cronInput" placeholder="输入 Cron 表达式… 例如：0 9 * * 1-5" style="min-height:auto;font-size:1.125rem;font-family:'JetBrains Mono',monospace;text-align:center" oninput="parseCron()">
+<div style="margin:.75rem 0;color:#94a3b8;font-size:.75rem">
+<strong>格式：</strong><code>分 时 日 月 星期</code> (5位) 或 <code>秒 分 时 日 月 星期</code> (6位) · 支持 <code>* , - /</code> 通配符
+</div>
+<div id="description" style="background:#0f172a;border-radius:8px;padding:1rem;margin:.75rem 0;color:#f1f5f9;font-size:1rem"></div>
+<div style="color:#94a3b8;font-size:.75rem;margin-bottom:.5rem">接下来 5 次执行时间：</div>
+<div id="nextRuns" style="background:#0f172a;border-radius:8px;padding:1rem;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:.8125rem;line-height:1.8"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+function parseCron(){
+const expr=document.getElementById('cronInput').value.trim();
+const parts=expr.split(/\s+/);
+let sec,min,hour,dom,month,dow;
+if(parts.length===6){[sec,min,hour,dom,month,dow]=parts}
+else if(parts.length===5){sec='0';[min,hour,dom,month,dow]=parts}
+else{document.getElementById('description').textContent='请输入5位或6位Cron表达式';document.getElementById('nextRuns').textContent='';return}
+
+const desc=[];
+// Minute
+if(min==='*')desc.push('每分钟');
+else if(min.includes('/'))desc.push(`每${min.split('/')[1]}分钟`);
+else desc.push(`第${min}分`);
+// Hour
+if(hour==='*')desc.push('每小时');
+else if(hour.includes('/'))desc.push(`每${hour.split('/')[1]}小时`);
+else desc.push(`${hour}时`);
+// Day of month
+if(dom==='*')desc.push('每天');
+else if(dom.includes('-')){const[d1,d2]=dom.split('-');desc.push(`${d1}号到${d2}号`)}
+else desc.push(`每月${dom}号`);
+// Month
+if(month!=='*')desc.push(`${month}月`);
+// Day of week
+if(dow!=='*'){
+const dayNames={'0':'周日','1':'周一','2':'周二','3':'周三','4':'周四','5':'周五','6':'周六','7':'周日'};
+if(dow.includes('-')){const[d1,d2]=dow.split('-');desc.push(`${dayNames[d1]||d1}到${dayNames[d2]||d2}`)}
+else if(dow.includes(',')){desc.push(dow.split(',').map(d=>dayNames[d]||d).join('、'))}
+else desc.push(dayNames[dow]||dow);
+}
+document.getElementById('description').innerHTML='📅 <strong>'+desc.join('，')+'</strong>';
+
+// Next 5 runs
+const now=new Date();const runs=[];
+let d=new Date(now);d.setSeconds(0,0);d.setMinutes(d.getMinutes()+1);
+const maxIter=60*24*7;
+for(let i=0;i<maxIter&&runs.length<5;i++){
+d.setMinutes(d.getMinutes()+1);
+if(matchField(d.getMinutes(),min)&&matchField(d.getHours(),hour)&&matchField(d.getDate(),dom)&&matchField(d.getMonth()+1,month)&&matchField(d.getDay(),dow)){
+const s=d.getSeconds();if(parts.length===6&&!matchField(s,sec))continue;
+runs.push(new Date(d));
+}
+}
+document.getElementById('nextRuns').innerHTML=runs.map((d,i)=>
+`${i+1}. ${d.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}`
+).join('<br>');
+}
+function matchField(val,pattern){
+if(pattern==='*')return true;
+if(pattern.includes(','))return pattern.split(',').some(p=>matchField(val,p));
+if(pattern.includes('/')){
+const[pStart,pStep]=pattern.split('/');
+const start=pStart==='*'?0:parseInt(pStart);
+return val>=start&&(val-start)%parseInt(pStep)===0;
+}
+if(pattern.includes('-')){
+const[p1,p2]=pattern.split('-');return val>=parseInt(p1)&&val<=parseInt(p2);
+}
+return val===parseInt(pattern);
+}
+document.getElementById('cronInput').value='0 9 * * 1-5';
+parseCron();
+</script>
+</body>
+</html>

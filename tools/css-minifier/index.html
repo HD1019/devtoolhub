@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CSS压缩 - 在线CSS代码压缩/格式化工具 | DevTools</title>
+<meta name="description" content="免费在线CSS压缩和格式化工具：一键压缩CSS去除空格注释，或格式化美化。纯浏览器本地处理。">
+<meta name="keywords" content="CSS压缩,CSS minify,CSS格式化,css美化,minify css online,css压缩工具">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/css-minifier/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / CSS 压缩 & 格式化</div>
+<h1>🎨 CSS 压缩 & 格式化</h1>
+<p class="tool-desc">CSS代码一键压缩（去除空格、注释、换行）或格式化美化。纯浏览器本地处理。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div class="btn-group">
+<button class="btn btn-primary" onclick="minifyCSS()">📦 压缩 CSS</button>
+<button class="btn btn-primary" onclick="beautifyCSS()">✨ 格式化 CSS</button>
+<button class="btn btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+<button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div><label>输入 CSS</label><textarea id="input" placeholder="粘贴 CSS 代码…" style="min-height:280px"></textarea></div>
+<div><label>输出</label><textarea id="output" placeholder="结果…" readonly style="min-height:280px"></textarea></div>
+</div>
+<div id="stats" style="color:#94a3b8;font-size:.75rem;margin-top:.5rem"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+const inp=document.getElementById('input'),out=document.getElementById('output'),stats=document.getElementById('stats');
+function minifyCSS(){
+let css=inp.value;
+css=css.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*([{}:;,])\s*/g,'$1').replace(/;}/g,'}').trim();
+out.value=css;showStats(css);
+}
+function beautifyCSS(){
+let css=inp.value.replace(/\s*([{}:;,])\s*/g,'$1');
+let indent=0,result='';
+css.split(/([{};])/).forEach(part=>{
+part=part.trim();if(!part)return;
+if(part==='}')indent=Math.max(0,indent-2);
+if(part!=='{'&&part!=='}'&&part!==';')result+=' '.repeat(indent)+part;
+if(part===';')result+=';\n';
+if(part==='{'){result+=' {\n';indent+=2}
+if(part==='}')result+=' '.repeat(indent)+'}\n';
+});
+out.value=result.trim();showStats(result);
+}
+function showStats(css){stats.textContent='压缩后: '+(new Blob([css]).size/1024).toFixed(1)+' KB · '+(css.split('\n').length)+' 行'}
+function copyOutput(){if(out.value)navigator.clipboard.writeText(out.value)}
+function clearAll(){inp.value='';out.value='';stats.textContent=''}
+inp.value='/* 示例 CSS */\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: Arial, sans-serif;\n  background: #f0f0f0;\n}\n\n.container {\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 20px;\n}\n\n.button {\n  display: inline-block;\n  padding: 10px 20px;\n  background: #007bff;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}';
+minifyCSS();
+</script>
+</body>
+</html>

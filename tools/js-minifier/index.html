@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JS压缩 - 在线JavaScript代码压缩/格式化工具 | DevTools</title>
+<meta name="description" content="免费在线JavaScript压缩和格式化工具：一键压缩JS去除空格注释，或格式化美化。纯浏览器本地处理。">
+<meta name="keywords" content="JS压缩,JavaScript minify,JS格式化,js美化,minify js online,js压缩工具">
+<link rel="canonical" href="https://HD1019.github.io/devtoolhub/tools/js-minifier/">
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<nav class="nav"><a href="/devtoolhub/" class="nav-logo">🛠 <span>Dev</span>Tools</a><ul class="nav-links"><li><a href="/devtoolhub/">首页</a></li><li><a href="/devtoolhub/#tools">工具</a></li></ul></nav>
+<main class="tool-page">
+<div class="breadcrumb"><a href="/devtoolhub/">首页</a> / JavaScript 压缩 & 格式化</div>
+<h1>⚡ JavaScript 压缩 & 格式化</h1>
+<p class="tool-desc">JS代码一键压缩（去除空格、注释、换行）或格式化美化。纯浏览器本地处理。</p>
+<div class="ad-slot">广告位</div>
+<div class="tool-workspace">
+<div class="btn-group">
+<button class="btn btn-primary" onclick="minifyJS()">📦 压缩 JS</button>
+<button class="btn btn-primary" onclick="beautifyJS()">✨ 格式化 JS</button>
+<button class="btn btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+<button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div><label>输入 JavaScript</label><textarea id="input" placeholder="粘贴 JavaScript 代码…" style="min-height:280px"></textarea></div>
+<div><label>输出</label><textarea id="output" placeholder="结果…" readonly style="min-height:280px"></textarea></div>
+</div>
+<div id="stats" style="color:#94a3b8;font-size:.75rem;margin-top:.5rem"></div>
+</div>
+<div class="ad-slot">广告位</div>
+</main>
+<footer class="footer"><p>© 2026 <a href="/devtoolhub/">DevTools</a></p></footer>
+<script>
+const inp=document.getElementById('input'),out=document.getElementById('output'),stats=document.getElementById('stats');
+function minifyJS(){
+let js=inp.value;
+// Remove single-line comments
+js=js.replace(/\/\/.*$/gm,'');
+// Remove multi-line comments
+js=js.replace(/\/\*[\s\S]*?\*\//g,'');
+// Remove extra whitespace
+js=js.replace(/\s+/g,' ').replace(/\s*([{}();,:[\]])\s*/g,'$1').trim();
+out.value=js;showStats(js);
+}
+function beautifyJS(){
+let js=inp.value;
+let indent=0;const result=[];
+// Simple beautify
+js.split(/([{}(),;])/).forEach(part=>{
+part=part.trim();if(!part)return;
+if(part==='}')indent=Math.max(0,indent-2);
+const line=' '.repeat(indent)+part;
+if(part==='{'){result.push(line);indent+=2}
+else if(part==='}')result.push(line);
+else if(part===';')result[result.length-1]+=';';
+else result.push(line);
+});
+out.value=result.join('\n');showStats(result.join('\n'));
+}
+function showStats(js){stats.textContent='处理后: '+(new Blob([js]).size/1024).toFixed(1)+' KB · '+js.split('\n').length+' 行'}
+function copyOutput(){if(out.value)navigator.clipboard.writeText(out.value)}
+function clearAll(){inp.value='';out.value='';stats.textContent=''}
+inp.value='// Example JavaScript\nfunction calculateTotal(items) {\n  // Sum all prices\n  let total = 0;\n  for (let i = 0; i < items.length; i++) {\n    total += items[i].price;\n  }\n  /* Apply discount */\n  if (total > 100) {\n    total *= 0.9;\n  }\n  return total;\n}\n\nconst cart = [\n  { name: "Book", price: 29.99 },\n  { name: "Pen", price: 4.99 }\n];\n\nconsole.log(calculateTotal(cart));';
+beautifyJS();
+</script>
+</body>
+</html>
